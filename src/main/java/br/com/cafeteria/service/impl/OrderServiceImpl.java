@@ -31,10 +31,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto getTotalPrice(Long orderId) {
-        BigDecimal totalPrice = BigDecimal.ZERO;
         Optional<OrderEntity> orderEntity = orderRepository.findById(orderId);
         if (orderEntity.isPresent()) {
-            totalPrice = orderEntity.get().getProductOrderEntityList().stream().map(item -> item.getProduct().getPrice().multiply(BigDecimal.valueOf(item.getQuantity()))).reduce(BigDecimal.ZERO, BigDecimal::add);
+            BigDecimal totalPrice = orderEntity.get().getProductOrderEntityList().stream().map(item -> item.getProduct().getPrice().multiply(BigDecimal.valueOf(item.getQuantity()))).reduce(BigDecimal.ZERO, BigDecimal::add);
             return new OrderDto(orderEntity.get().getId(), orderEntity.get().getStatus(), totalPrice);
         }
         return null;
@@ -44,7 +43,8 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto closeOrder(Long orderId, BigDecimal paidValue, BigDecimal totalPrice) {
         Optional<OrderEntity> orderEntity = orderRepository.findById(orderId);
         if (orderEntity.isPresent()) {
-            OrderEntity entity = orderRepository.save(orderEntity.get().closeOrder(OrderStatusEnum.PAID, paidValue, totalPrice));
+            orderEntity.get().closeOrder(OrderStatusEnum.PAID, paidValue, totalPrice);
+            OrderEntity entity = orderRepository.save(orderEntity.get());
             return new OrderDto(entity);
         }
         return null;

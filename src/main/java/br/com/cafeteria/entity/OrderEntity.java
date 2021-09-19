@@ -33,10 +33,16 @@ public class OrderEntity {
         this.status = status;
     }
 
-    public OrderEntity closeOrder(OrderStatusEnum orderStatusEnum, BigDecimal paidValue, BigDecimal totalPrice) {
+    public void closeOrder(OrderStatusEnum orderStatusEnum, BigDecimal paidValue, BigDecimal totalPrice) {
         this.status = orderStatusEnum;
         this.paidValue = paidValue;
         this.totalPrice = totalPrice;
-        return this;
+    }
+
+    public OrderEntity(Long id, OrderStatusEnum status, BigDecimal paidValue, BigDecimal totalPrice) {
+        this.id = id;
+        this.status = status;
+        this.paidValue = paidValue;
+        this.totalPrice = totalPrice;
     }
 }
